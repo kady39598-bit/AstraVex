@@ -1,20 +1,31 @@
 extends CharacterBody3D
 
-@export var speed = 6.0
+var vida = 100
+var xp = 0
+var astras = []
+var montaria = null
 
-func _physics_process(delta):
-	var dir = Vector3.ZERO
+var em_queda = false
+var na_agua = false
+var na_lava = false
+
+func _ready():
+	add_to_group("player")
+
+func montar_auto():
+	var tipo = "terra"
 	
-	if Input.is_action_pressed("move_forward"):
-		dir.z -= 1
-	if Input.is_action_pressed("move_back"):
-		dir.z += 1
-	if Input.is_action_pressed("move_left"):
-		dir.x -= 1
-	if Input.is_action_pressed("move_right"):
-		dir.x += 1
+	if em_queda:
+		tipo = "voador"
+	elif na_agua:
+		tipo = "agua"
+	elif na_lava:
+		tipo = "fogo"
 	
-	dir = dir.normalized()
-	velocity = dir * speed
-	
-	move_and_slide()
+	for a in astras:
+		if a.tipo == tipo:
+			montaria = a
+			return
+
+func adicionar_astra(a):
+	astras.append(a)
